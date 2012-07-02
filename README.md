@@ -1,7 +1,5 @@
 # ConditionalAttributeValidator
 
-TODO: Write a gem description
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -16,9 +14,27 @@ Or install it yourself as:
 
     $ gem install conditional_attribute_validator
 
-## Usage
+## Example Usage
 
-TODO: Write usage instructions here
+class User
+  include ConditionalAttributeValidator
+  
+  validate :login, :email, :password, :password_confirmation, :presence => true
+  validate :login, :email, :uniqueness => true
+  
+  #the attribute validation needs to be specified after all other validations have been set
+  validate_attribute_with_condition :login, :if => :has_another_form_of_authentication?
+
+  #also, there is a grammar for multiple attributes
+  #and we support :if/:unless conditions
+  validate_attribute_with_condition :login, :email, :password, :password_confirmation, :unless => :has_another_form_of_authentication?
+  
+  protected
+  def has_another_form_of_authentication?
+    #your app specific logic here
+  end
+  
+end
 
 ## Contributing
 
